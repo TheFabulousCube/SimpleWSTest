@@ -1,0 +1,13 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.1">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <InstallerPlatform>x64</InstallerPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientWorkerService\ClientWorkerService.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.1" />
+  </ItemGroup>
+</Project>

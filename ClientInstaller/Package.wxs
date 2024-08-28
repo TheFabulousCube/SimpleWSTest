@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Define the variables in "$(var.*) expressions" -->
+<?define Name = "ClientWorkerService" ?>
+<?define Manufacturer = "GreenwayHealth" ?>
+<?define Version = "1.2.2.0" ?>
+<?define UpgradeCode = "3ce492f8-7886-4e83-897b-2e947be0a961" ?>
+<?define ServiceName = "ClientService" ?>
+<?define ServiceDir = "..\ClientWorkerService" ?> 
+<?define ExecutableName = "ClientWorkerService.exe" ?>
+<?define SERVERURL = "ws://wsbn4zhk-5000.use.devtunnels.ms/ws" ?>
+<?define HEARTBEATDELAY = "45" ?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:Util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Package Name="$(Name)"
+           Manufacturer="$(Manufacturer)"
+           Version="$(Version)"
+           UpgradeCode="$(var.UpgradeCode)"
+           Compressed="true">
+    <Property Id="ClientId" Secure="yes" />
+    <Property Id="ServerUrl" Value="$(var.SERVERURL)" />
+    <Property Id="HeartbeatDelay" Value="$(var.HEARTBEATDELAY)" />
+
+    <!-- Allow upgrades and prevent downgrades -->
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+    <Media Id='1' Cabinet='cab1.cab' EmbedCab='yes' />
+
+    <!-- Define the directory structure -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <!-- Create a folder inside program files -->
+      <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
+        <!-- Create a folder within the parent folder given the name -->
+        <Directory Id="INSTALLFOLDER" Name="$(Name)" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- The files inside this DirectoryRef are linked to
+         the AppService directory via INSTALLFOLDER -->
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="ServiceExecutable" Bitness="always64">
+        <!-- Copies the AppService.exe file using the
+             project reference preprocessor variables -->
+        <File Id="Executable"
+              Source="$(var.ServiceDir)\bin\Release\net8.0\win-x64\publish\$(var.ExecutableName)"
+              KeyPath="true" />
+        <File Source="$(var.ServiceDir)\appsettings.json" />
+
+        <!-- Remove all files from the INSTALLFOLDER on uninstall -->
+        <RemoveFile Id="ALLFILES" Name="*.*" On="both" />
+
+        <!-- Tell WiX to install the Service -->
+        <ServiceInstall Id="ServiceInstaller"
+                        Type="ownProcess"
+                        Name="$(ServiceName)"
+                        DisplayName="$(Name)"
+                        Description="!(loc.ServiceDescription)"
+                        Start="auto"
+                        Account="LocalSystem"
+                        ErrorControl="normal"
+                        Arguments="--clientId &quot;[ClientId]&quot; --serverUrl &quot;[ServerUrl]&quot; --heartbeatDelay [HeartbeatDelay]" />
+
+        <!-- Tell WiX to start the Service -->
+        <ServiceControl Id="StartService"
+                        Start="install"
+                        Stop="both"
+                        Remove="uninstall"
+                        Name="$(ServiceName)"
+                        Wait="true" />
+
+        <!-- Tell WiX how to configure the Service -->
+        <Util:ServiceConfig
+                        FirstFailureActionType="restart"
+                        SecondFailureActionType="restart"
+                        ThirdFailureActionType="restart"
+                        ResetPeriodInDays="1"
+                        RestartServiceDelayInSeconds="60"
+                        ServiceName="$(ServiceName)" />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Tell WiX to install the files -->
+    <Feature Id="Service" Title="AppService Setup" Level="1">
+      <ComponentRef Id="ServiceExecutable" />
+    </Feature>
+  </Package>
+</Wix>
+
