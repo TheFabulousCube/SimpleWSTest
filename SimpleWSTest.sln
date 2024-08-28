@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWS-Server", "SimpleWS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWS-Client", "SimpleWS-Client\SimpleWS-Client.csproj", "{287B07C2-0708-4003-BF00-574893269101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWorkerService", "ClientWorkerService\ClientWorkerService.csproj", "{BDC44A55-47B1-4F58-A293-DD4BB206EC67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientWorkerService", "ClientWorkerService\ClientWorkerService.csproj", "{BDC44A55-47B1-4F58-A293-DD4BB206EC67}"
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "ClientInstaller", "ClientInstaller\ClientInstaller.wixproj", "{FD5ABE1B-01EB-4629-9114-8C2D4279654D}"
 EndProject

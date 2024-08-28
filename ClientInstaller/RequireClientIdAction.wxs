@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<CustomAction Id="CheckClientId" Property="ClientId" Value="[ClientId]" Execute="immediate" />
+		<CustomAction Id="AbortIfNoClientId" Script="vbscript">
+			<![CDATA[
+      If Session.Property("ClientId") = "" Then
+        MsgBox "ClientId must be provided. Installation will be aborted."
+        Session.Property("CustomActionData") = "Abort"
+      End If
+      ]]>
+		</CustomAction>
+
+		<InstallExecuteSequence>
+			<Custom Action="CheckClientId" Before="InstallInitialize">NOT Installed</Custom>
+			<Custom Action="AbortIfNoClientId" After="CheckClientId">NOT Installed</Custom>
+		</InstallExecuteSequence>
+	</Fragment>
+</Wix>

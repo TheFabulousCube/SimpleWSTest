@@ -2,7 +2,7 @@
 
 <!-- Define the variables in "$(var.*) expressions" -->
 <?define Name = "ClientWorkerService" ?>
-<?define Manufacturer = "GreenwayHealth" ?>
+<?define Manufacturer = "The Fabulous Cube" ?>
 <?define Version = "1.2.2.0" ?>
 <?define UpgradeCode = "3ce492f8-7886-4e83-897b-2e947be0a961" ?>
 <?define ServiceName = "ClientService" ?>
@@ -13,12 +13,15 @@
 
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:Util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <!-- Include the custom actions defined in RequireClientIdAction.wxs -->
+  <?include RequireClientIdAction.wxs?>
+
   <Package Name="$(Name)"
            Manufacturer="$(Manufacturer)"
            Version="$(Version)"
            UpgradeCode="$(var.UpgradeCode)"
            Compressed="true">
-    <Property Id="ClientId" Secure="yes" />
+    <Property Id="ClientId" />
     <Property Id="ServerUrl" Value="$(var.SERVERURL)" />
     <Property Id="HeartbeatDelay" Value="$(var.HEARTBEATDELAY)" />
 
